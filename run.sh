@@ -1,4 +1,4 @@
-cd /home/ubuntu/codename-okbh/
+cd /home/ubuntu/project-cybertard/
 export DISCORD_TOKEN=""
 export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 export XRT_TPU_CONFIG="localservice;0;localhost:51011" 
