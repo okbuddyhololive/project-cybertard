@@ -2,9 +2,9 @@
 # TODO: comment out the variables and what do they mean
 
 prefix = "%"
-channel_id = 950404990806130718
+channel_id = 935543814335107152
 
-name = "Meadiao"
+name = "Holotard"
 max_length = 32768
 
 [Inference]
