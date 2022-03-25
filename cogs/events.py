@@ -14,8 +14,11 @@ class Events(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             return
 
+        # TODO: look into it a bit more and maybe implement something with `logging`
+
         print(error)
         await ctx.send(f"```\n{error}\n```")
+
 
 def setup(bot):
     bot.add_cog(Events(bot))

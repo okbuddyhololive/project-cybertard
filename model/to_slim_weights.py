@@ -15,8 +15,6 @@ from mesh_transformer.util import clip_by_global_norm, to_bf16, to_f16
 from model.constants import ModelParams
 
 
-
-
 if __name__ == "__main__":
     params = ModelParams().__dict__
     convert_fn = to_bf16
@@ -32,11 +30,13 @@ if __name__ == "__main__":
     mesh_shape = (jax.device_count() // cores_per_replica, cores_per_replica)
     devices = np.array(jax.devices()).reshape(mesh_shape)
 
-    with jax.experimental.maps.mesh(devices, ('dp', 'mp')):
+    with jax.experimental.maps.mesh(devices, ("dp", "mp")):
         network = CausalTransformer(params)
 
         start = time.time()
-        network.state = read_ckpt(network.state, f"checkpoint/", devices.shape[1], load_opt=False)
+        network.state = read_ckpt(
+            network.state, f"checkpoint/", devices.shape[1], load_opt=False
+        )
         print(f"network loaded in {time.time() - start:.06}s")
 
         start = time.time()
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         network.state["params"] = convert_fn(network.state["params"])
         print(f"network converted in {time.time() - start:.06}s")
 
-        suffix ="_slim"
+        suffix = "_slim"
 
         for i in range(cores_per_replica):
             write_ckpt(network.state, f"checkpoint_slim/", i)

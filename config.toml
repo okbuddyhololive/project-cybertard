@@ -1,0 +1,25 @@
+# TODO: move the uncategorized variables into a section of some sort
+# TODO: comment out the variables and what do they mean
+
+prefix = "%"
+channel_id = 950404990806130718
+
+name = "Meadiao"
+max_length = 32768
+
+[Inference]
+length = 256
+top_p = 0.8
+temperature = 1.0
+
+[Model]
+layers = 28
+d_model = 4096
+n_heads = 16
+n_vocab = 50400
+norm = "layernorm"
+pe = "rotary"
+pe_rotary_dims = 64
+seq = 2048
+cores_per_replica = 8
+per_replica_batch = 1
