@@ -8,9 +8,9 @@ name = "Holotard"
 max_length = 32768
 
 [Inference]
-length = 256
-top_p = 0.8
-temperature = 1.0
+length = 32
+top_p = 0.9
+temperature = 0.8
 
 [Model]
 layers = 28
