@@ -2,16 +2,16 @@
 # TODO: comment out the variables and what do they mean
 
 prefix = "%"
-channel_id = 935543814335107152
+channel_id = [935543814335107152, 857822603292442674, 857816882899583006, 857816615273889813]
 
 name = "Holotard"
 max_length = 32768
-response_probability = 0.03
+response_probability = 0.02
 
 [Inference]
 length = 32
-top_p = 0.9
-temperature = 0.8
+top_p = 1
+temperature = 0.9
 
 [Model]
 layers = 28

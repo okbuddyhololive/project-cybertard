@@ -1,3 +1,4 @@
+import collections
 import functools
 import random
 import re
@@ -11,8 +12,8 @@ class Chatbot(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.model = model.Inference(parameters=model.ModelParams(**self.bot.config["Model"]),
-            config=model.InferConfig(**self.bot.config["Inference"]), )
-        self.prompt = ""
+                                     config=model.InferConfig(**self.bot.config["Inference"]), )
+        self.prompt = collections.defaultdict(str)
 
         self.name = self.bot.config["name"]
         self.max_length = self.bot.config["max_length"]
@@ -22,16 +23,19 @@ class Chatbot(commands.Cog):
         if message.author.bot and message.author != self.bot.user:
             return
 
-        if message.channel.id != self.bot.config["channel_id"]:
+        channel_id = message.channel.id
+        if channel_id not in  self.bot.config["channel_id"]:
             return
 
         # adding message to the prompt
-        self.prompt += f"<{message.author.name}>: {message.clean_content}\n-----\n"  # TODO: Extract split fn
+        # TODO: Extract split fn
+        self.prompt[channel_id] += f"<{message.author.name}>: {message.clean_content}\n-----\n"
+        prompt = self.prompt[channel_id]
 
-        if len(self.prompt) > self.max_length:
-            self.prompt = self.prompt[-self.max_length:]
+        if len(prompt) > self.max_length:
+            self.prompt[channel_id] = prompt = prompt[-self.max_length:]
 
-        messages = self.prompt.replace(self.bot.user.name, self.name)
+        messages = prompt.replace(self.bot.user.name, self.name)
 
         if message.author != self.bot.user:
             if self.bot.user in message.mentions or random.random() < self.bot.config["response_probability"]:
