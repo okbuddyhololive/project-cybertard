@@ -1,4 +1,5 @@
 import functools
+import random
 import re
 
 from discord.ext import commands
@@ -34,7 +35,7 @@ class Chatbot(commands.Cog):
 
         messages = self.prompt.replace(self.bot.user.name, self.name)
 
-        if self.bot.user in message.mentions:
+        if self.bot.user in message.mentions or random.random() < self.bot.config["response_probability"]:
             # partial function needed for async
             function = functools.partial(
                 self.model.generate,

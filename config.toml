@@ -6,6 +6,7 @@ channel_id = 935543814335107152
 
 name = "Holotard"
 max_length = 32768
+response_probability = 0.03
 
 [Inference]
 length = 32
