@@ -47,9 +47,9 @@ class Chatbot(commands.Cog):
                     response = await self.bot.loop.run_in_executor(None, function)
                     response = response.split("\n-----\n")[0]
                     response = response.replace(f'@{self.name}', f'<@{self.bot.user.id}>')
-                    for member in message.guild.members:
-                        user = member.user
-                        response = response.replace(f'@{user.username}', f'<@{user.id}>')
+                    # for member in message.guild.members:
+                    #     user = member.user
+                    #     response = response.replace(f'@{user.username}', f'<@{user.id}>')
                 if response:
                     await message.reply(response, mention_author=False)
 
