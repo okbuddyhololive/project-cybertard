@@ -42,7 +42,8 @@ class Chatbot(commands.Cog):
                 response = response.split("\n-----\n")[0]
                 for user in self.bot.users:
                     response = response.replace(f'@{user.name}', f'<@{user.id}>')
-            await message.reply(response, mention_author=False)
+            if not response:
+                await message.reply(response, mention_author=False)
 
 
 def setup(bot):
