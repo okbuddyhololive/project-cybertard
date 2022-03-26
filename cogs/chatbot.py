@@ -44,8 +44,9 @@ class Chatbot(commands.Cog):
 
             async with message.channel.typing():
                 response = await self.bot.loop.run_in_executor(None, function)
-
-            response = response.split("\n-----\n")[0]
+                response = response.split("\n-----\n")[0]
+                for user in self.bot.users:
+                    response = response.replace(user.name, f'<@{user.id}>')
             await message.reply(response, mention_author=False)
 
 
