@@ -19,12 +19,13 @@ class Chatbot(commands.Cog):
         self.max_length = self.bot.config["max_length"]
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         if message.author.bot and message.author != self.bot.user:
             return
-
+        if not hasattr(message, 'guild'):  # no DM
+            return
         channel_id = message.channel.id
-        if channel_id not in  self.bot.config["channel_id"]:
+        if channel_id not in self.bot.config["channel_id"]:
             return
 
         # adding message to the prompt
@@ -46,8 +47,9 @@ class Chatbot(commands.Cog):
                     response = await self.bot.loop.run_in_executor(None, function)
                     response = response.split("\n-----\n")[0]
                     response = response.replace(f'@{self.name}', f'<@{self.bot.user.id}>')
-                    for user in self.bot.users:
-                        response = response.replace(f'@{user.name}', f'<@{user.id}>')
+                    for member in message.guild.members:
+                        user = member.user
+                        response = response.replace(f'@{user.username}', f'<@{user.id}>')
                 if response:
                     await message.reply(response, mention_author=False)
 
