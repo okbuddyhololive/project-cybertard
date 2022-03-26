@@ -5,11 +5,11 @@ prefix = "%"
 channel_id = [935543814335107152, 857822603292442674, 857816882899583006, 857816615273889813]
 
 name = "Holotard"
-max_length = 32768
+max_length = 65536
 response_probability = 0.02
 
 [Inference]
-length = 32
+length = 64
 top_p = 1
 temperature = 0.9
 
