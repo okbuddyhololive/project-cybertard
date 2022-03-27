@@ -31,13 +31,13 @@ class Debug(commands.Cog):
 
         setattr(self.bot.infer_config, key, value)
 
-        await ctx.send(f"Succesfully set `{key}` from `{original_value}` to `{value}`")
+        await ctx.send(f"Successfully set `{key}` from `{original_value}` to `{value}`")
 
     @commands.command()
     @commands.is_owner()
     async def config(self, ctx, key: typing.Optional[str] = None, *, value=None):
         if key is None:
-            return await ctx.send(yaml.dump(self.bot.infer_config.__dict__, indent=4))
+            return await ctx.send(yaml.dump({'config': self.bot.infer_config.__dict__}, indent=4))
         if value is None:
             return await self._get_config(ctx, key)
         await self._set_config(ctx, key, value)
