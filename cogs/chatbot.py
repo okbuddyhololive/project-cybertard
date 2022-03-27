@@ -36,22 +36,25 @@ class Chatbot(commands.Cog):
         if len(prompt) > self.max_length:
             self.prompt[channel_id] = prompt = prompt[-self.max_length:]
 
+        if message.author == self.bot.user:
+            return
+
+        if self.bot.user not in message.mentions and random.random() >= self.bot.config["response_probability"]:
+            return
+
         messages = prompt.replace(self.bot.user.name, self.name)
 
-        if message.author != self.bot.user:
-            if self.bot.user in message.mentions or random.random() < self.bot.config["response_probability"]:
-                # partial function needed for async
-                function = functools.partial(self.model.generate, prompt=messages + f"<{self.name}>:", )
+        # partial function needed for async
+        function = functools.partial(self.model.generate, prompt=messages + f"<{self.name}>:", )
 
-                async with message.channel.typing():
-                    response = await self.bot.loop.run_in_executor(None, function)
-                    response = response.split("\n-----\n")[0]
-                    response = response.replace(f'@{self.name}', f'<@{self.bot.user.id}>')
-                    # for member in message.guild.members:
-                    #     user = member.user
-                    #     response = response.replace(f'@{user.username}', f'<@{user.id}>')
-                if response:
-                    await message.reply(response, mention_author=False)
+        async with message.channel.typing():
+            response = await self.bot.loop.run_in_executor(None, function)
+            response = response.split("\n-----\n")[0]
+            response = response.replace(f'@{self.name}', f'<@{self.bot.user.id}>')
+            for user in self.bot.users:
+                response = response.replace(f'@{user.name}', f'<@{user.id}>')
+        if response:
+            await message.reply(response, mention_author=False)
 
 
 def setup(bot):
