@@ -9,7 +9,7 @@ from model import InferConfig
 with open("config.toml", "r") as file:
     config = toml.load(file)
 
-bot = commands.Bot(command_prefix=config["prefix"], help_command=None)
+bot = commands.Bot(intents=discord.Intents.all(), command_prefix=config["prefix"], help_command=None)
 
 bot.config = config  # for global access between cogs
 bot.infer_config = InferConfig(**bot.config["Inference"])
