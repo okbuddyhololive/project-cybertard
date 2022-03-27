@@ -10,7 +10,7 @@ from model import Inference, ModelParams
 
 
 class Chatbot(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.model = Inference(
             parameters=ModelParams(**self.bot.config["Model"]),
@@ -19,7 +19,7 @@ class Chatbot(commands.Cog):
         self.prompt = collections.defaultdict(str)
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         if message.author.bot and message.author != self.bot.user:
             return
 
