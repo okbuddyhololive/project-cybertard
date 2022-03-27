@@ -11,7 +11,7 @@ from model import Inference, ModelParams
 _key = "[a-zA-Z0-9\.]+"
 _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
                            f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
-                           f"config:\n    {key}: {key})")
+                           f"config:\n    {_key}: {_key})")
 
 
 class Chatbot(commands.Cog):
