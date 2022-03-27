@@ -24,7 +24,7 @@ class Chatbot(commands.Cog):
             return
 
         channel_id = message.channel.id
-        if channel_id not in self.bot.config["channel_id"]:
+        if channel_id not in self.bot.config["channels"]:
             return
 
         # adding message to the prompt
