@@ -35,7 +35,9 @@ class Debug(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def config(self, ctx, key: str, *, value=None):
+    async def config(self, ctx, key: typing.Optional[str] = None, *, value=None):
+        if key is None:
+            await ctx.send(yaml.dump(self.bot.infer_config.__dict__, indent=4))
         if value is None:
             return await self._get_config(ctx, key)
 
