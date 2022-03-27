@@ -14,6 +14,10 @@ _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not 
                            f"config:\n    {_key}: {_key})")
 
 
+def replace_ping(original_name: str, new_id: int, text: str):
+    return re.sub('@' + ''.join(f'({c.lower()}|{c.upper()})' for c in original_name), f'<@{new_id}>', text)
+
+
 class Chatbot(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -54,11 +58,10 @@ class Chatbot(commands.Cog):
             function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:")
             response = await self.bot.loop.run_in_executor(None, function)
             response = response.split("\n-----\n")[0]
-            response = re.sub('@' + ''.join(f'({c.lower()}|{c.upper()})' for c in self.bot.infer_config.name),
-                              f'<@{self.bot.user.id}>', response)
+            response = replace_ping(self.bot.infer_config.name, self.bot.user.id, response)
             # replacing names with actual mentions so that mentions actually work
             for user in self.bot.users:
-                response = response.replace(f"@{user.name}", f"<@{user.id}>")
+                response = replace_ping(user.name, user.id, response)
 
         if response:
             await message.reply(response, mention_author=False)
