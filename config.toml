@@ -2,7 +2,7 @@
 # TODO: comment out the variables and what do they mean
 
 prefix = "%"
-channels = [935543814335107152, 857822603292442674, 857816882899583006, 857816615273889813]
+channels = [935543814335107152, 857822603292442674, 857816882899583006]
 
 [Inference]
 name = "Holotard"
