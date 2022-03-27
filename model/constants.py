@@ -10,6 +10,8 @@ class InferConfig:
     response_probability: float = 0.02
     top_p: float = 1
     temperature: float = 0.9
+    max_same_replies: int = 2
+    same_reply_saved_messages: int = 6
 
 
 @dataclass

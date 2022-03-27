@@ -23,6 +23,7 @@ class Chatbot(commands.Cog):
         self.bot = bot
         self.model = Inference(parameters=ModelParams(**self.bot.config["Model"]), config=self.bot.infer_config, )
         self.prompt = collections.defaultdict(str)
+        self.previous_responses = collections.defaultdict(list)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -62,7 +63,11 @@ class Chatbot(commands.Cog):
             # replacing names with actual mentions so that mentions actually work
             for user in self.bot.users:
                 response = replace_ping(user.name, user.id, response)
-
+            prev_responses = self.previous_responses[channel_id]
+            if prev_responses.count(response) > self.bot.infer_config.max_same_replies:
+                return
+            prev_responses.append(response)
+            self.previous_responses[channel_id] = prev_responses[-self.bot.infer_config.same_reply_saved_messages:]
         if response:
             await message.reply(response, mention_author=False)
 
