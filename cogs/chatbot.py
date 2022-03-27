@@ -62,7 +62,7 @@ class Chatbot(commands.Cog):
             response = replace_ping(self.bot.infer_config.name, self.bot.user.id, response)
             # replacing names with actual mentions so that mentions actually work
             for user in self.bot.users:
-                response = replace_ping(user.name, user.id, response)
+                response = response.replace(f"@{user.name}", f"<@{user.id}>")
             prev_responses = self.previous_responses[channel_id]
             if prev_responses.count(response) > self.bot.infer_config.max_same_replies:
                 return
