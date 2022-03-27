@@ -5,25 +5,24 @@ import re
 
 from discord.ext import commands
 import discord
-import model
+
+from model import Inference, ModelParams
 
 
 class Chatbot(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.model = model.Inference(parameters=model.ModelParams(**self.bot.config["Model"]),
-                                     config=model.InferConfig(**self.bot.config["Inference"]), )
+        self.model = Inference(
+            parameters=ModelParams(**self.bot.config["Model"]),
+            config=self.bot.infer_config,
+        )
         self.prompt = collections.defaultdict(str)
 
-        self.name = self.bot.config["name"]
-        self.max_length = self.bot.config["max_length"]
-
     @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, message):
         if message.author.bot and message.author != self.bot.user:
             return
-        if not hasattr(message, 'guild'):  # no DM
-            return
+
         channel_id = message.channel.id
         if channel_id not in self.bot.config["channel_id"]:
             return
@@ -33,26 +32,28 @@ class Chatbot(commands.Cog):
         self.prompt[channel_id] += f"<{message.author.name}>: {message.clean_content}\n-----\n"
         prompt = self.prompt[channel_id]
 
-        if len(prompt) > self.max_length:
-            self.prompt[channel_id] = prompt = prompt[-self.max_length:]
+        if len(prompt) > self.bot.infer_config.prompt_length:
+            self.prompt[channel_id] = prompt = prompt[-self.bot.infer_config.prompt_length:]
 
         if message.author == self.bot.user:
             return
 
-        if self.bot.user not in message.mentions and random.random() >= self.bot.config["response_probability"]:
+        if self.bot.user not in message.mentions and random.random() >= self.bot.infer_config.response_probability:
             return
 
-        messages = prompt.replace(self.bot.user.name, self.name)
-
+        # replacing names with actual mentions so that mentions actually work
+        for user in self.bot.users:
+            response = response.replace(f"@{user.name}", f"<@{user.id}>")
+        
+        messages = prompt.replace(self.bot.user.name, self.bot.infer_config.name)
+        
         # partial function needed for async
-        function = functools.partial(self.model.generate, prompt=messages + f"<{self.name}>:", )
+        function = functools.partial(self.model.generate, prompt=messages + f"<{self.name}>:")
 
         async with message.channel.typing():
             response = await self.bot.loop.run_in_executor(None, function)
             response = response.split("\n-----\n")[0]
-            response = response.replace(f'@{self.name}', f'<@{self.bot.user.id}>')
-            for user in self.bot.users:
-                response = response.replace(f'@{user.name}', f'<@{user.id}>')
+
         if response:
             await message.reply(response, mention_author=False)
 

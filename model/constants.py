@@ -4,9 +4,12 @@ import optax
 
 @dataclass
 class InferConfig:
-    length: int = 256
-    top_p: float = 0.8
-    temperature: float = 1.0
+    name: str = "Holotard"
+    prompt_length: int = 65536
+    token_length: int = 64
+    response_probability: float = 0.02
+    top_p: float = 1
+    temperature: float = 0.9
 
 
 @dataclass

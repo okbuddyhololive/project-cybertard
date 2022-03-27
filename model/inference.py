@@ -55,7 +55,7 @@ class Inference:
         top_p: Optional[float] = None,
         temperature: Optional[float] = None,
     ) -> np.ndarray:
-        length = default(length, self.config.length)
+        length = default(length, self.config.token_length)
         top_p = default(top_p, self.config.top_p)
         temperature = default(temperature, self.config.temperature)
         prompt = prompt[:, -2048:]

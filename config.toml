@@ -2,14 +2,13 @@
 # TODO: comment out the variables and what do they mean
 
 prefix = "%"
-channel_id = [935543814335107152, 857822603292442674, 857816882899583006, 857816615273889813]
-
-name = "Holotard"
-max_length = 65536
-response_probability = 0.02
+channels = [935543814335107152, 857822603292442674, 857816882899583006, 857816615273889813]
 
 [Inference]
-length = 64
+name = "Holotard"
+prompt_length = 65536
+token_length = 64
+response_probability = 0.02
 top_p = 1
 temperature = 0.9
 
