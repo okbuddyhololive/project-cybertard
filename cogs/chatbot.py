@@ -42,7 +42,7 @@ class Chatbot(commands.Cog):
 
         async with message.channel.typing():
             # partial function needed for async
-            function = functools.partial(self.model.generate, prompt=messages + f"<{self.name}>:")
+            function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:")
             response = await self.bot.loop.run_in_executor(None, function)
             response = response.split("\n-----\n")[0]
             # replacing names with actual mentions so that mentions actually work
