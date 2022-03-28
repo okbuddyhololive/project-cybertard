@@ -8,9 +8,10 @@ from model import InferConfig
 
 with open("config.toml", "r") as file:
     config = toml.load(file)
+
 intents = Intents.default()
 intents.members = True
-bot = commands.Bot(intents=intents, command_prefix=config["prefix"], help_command=None)
+bot = commands.Bot(command_prefix=config["prefix"], help_command=None, intents=intents)
 
 bot.config = config  # for global access between cogs
 bot.infer_config = InferConfig(**bot.config["Inference"])

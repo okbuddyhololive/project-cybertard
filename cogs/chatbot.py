@@ -53,21 +53,28 @@ class Chatbot(commands.Cog):
             return
 
         messages = prompt.replace(self.bot.user.name, self.bot.infer_config.name)
+        function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:") # partial function needed for async
 
         async with message.channel.typing():
-            # partial function needed for async
-            function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:")
             response = await self.bot.loop.run_in_executor(None, function)
             response = response.split("\n-----\n")[0]
             response = replace_ping(self.bot.infer_config.name, self.bot.user.id, response)
+
             # replacing names with actual mentions so that mentions actually work
             for user in self.bot.users:
                 response = response.replace(f"@{user.name}", f"<@{user.id}>")
+            
+            # emojis too
+            for emoji in self.bot.emojis:
+                response = response.replace(f":{emoji.name}:", f"<:{emoji.name}:{emoji.id}>")
+            
             prev_responses = self.previous_responses[channel_id]
             if prev_responses.count(response) > self.bot.infer_config.max_same_replies:
                 return
+            
             prev_responses.append(response)
             self.previous_responses[channel_id] = prev_responses[-self.bot.infer_config.same_reply_saved_messages:]
+        
         if response:
             await message.reply(response, mention_author=False)
 
