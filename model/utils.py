@@ -22,7 +22,7 @@ def fix_emojis_and_mentions(text: str, users: List[User], emojis: List[Emoji]) -
         #text = replace_ping(user.name, user.id, text)
         text = text.replace(f"@{user.name}", f"<@{user.id}>")
 
-    text = _EMOJI_RE.replace("\\g<1>", text)
+    text = _EMOJI_RE.sub("\\g<1>", text)
 
     for emoji in emojis:
         if f"<:{emoji.name}:{emoji.id}>" in text:
