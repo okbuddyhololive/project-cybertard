@@ -1,27 +1,18 @@
 import collections
 import functools
 import random
-import re
 
 from discord.ext import commands
 import discord
 
 from model import Inference, ModelParams
-
-_key = "[a-zA-Z0-9\.]+"
-_AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
-                           f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
-                           f"config:\n    {_key}: {_key})")
-
-
-def replace_ping(original_name: str, new_id: int, text: str):
-    return re.sub('@' + ''.join(f'({c.lower()}|{c.upper()})' for c in original_name), f'<@{new_id}>', text)
-
+from model import utils
 
 class Chatbot(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.model = Inference(parameters=ModelParams(**self.bot.config["Model"]), config=self.bot.infer_config, )
+
+        self.model = Inference(parameters=ModelParams(**self.bot.config["Model"]), config=self.bot.infer_config)
         self.prompt = collections.defaultdict(str)
         self.previous_responses = collections.defaultdict(list)
 
@@ -35,7 +26,7 @@ class Chatbot(commands.Cog):
             return
 
         content = message.clean_content
-        if message.author == self.bot.user and _AUTO_MESSAGE.match(content):
+        if message.author == self.bot.user and utils.is_auto_message(content):
             return
 
         # adding message to the prompt
@@ -58,15 +49,9 @@ class Chatbot(commands.Cog):
         async with message.channel.typing():
             response = await self.bot.loop.run_in_executor(None, function)
             response = response.split("\n-----\n")[0]
-            response = replace_ping(self.bot.infer_config.name, self.bot.user.id, response)
-
-            # replacing names with actual mentions so that mentions actually work
-            for user in self.bot.users:
-                response = response.replace(f"@{user.name}", f"<@{user.id}>")
             
-            # emojis too
-            for emoji in self.bot.emojis:
-                response = response.replace(f":{emoji.name}:", f"<:{emoji.name}:{emoji.id}>")
+            response = utils.replace_ping(self.bot.infer_config.name, self.bot.user.id, response)
+            response = utils.fix_emojis_and_mentions(response, self.bot.users, self.bot.emojis)
             
             prev_responses = self.previous_responses[channel_id]
             if prev_responses.count(response) > self.bot.infer_config.max_same_replies:
