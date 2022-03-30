@@ -5,9 +5,9 @@ prefix = "%"
 channels = [935543814335107152, 857822603292442674, 857816882899583006]
 
 [Inference]
-name = "Holotard"
+name = "Suisei"
 prompt_length = 65536
-token_length = 64
+token_length = 16
 response_probability = 0.02
 top_p = 1
 temperature = 0.9

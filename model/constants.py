@@ -1,17 +1,21 @@
 from dataclasses import dataclass
+
 import optax
+
+BAD_WORDS = ["nigger", "faggot"]  # Can't be part of config to avoid printing it
 
 
 @dataclass
 class InferConfig:
     name: str = "Holotard"
     prompt_length: int = 65536
-    token_length: int = 64
+    token_length: int = 16
     response_probability: float = 0.02
     top_p: float = 1
     temperature: float = 0.9
     max_same_replies: int = 2
     same_reply_saved_messages: int = 6
+    max_response_retries: int = 3
 
 
 @dataclass
