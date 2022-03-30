@@ -1,3 +1,4 @@
+import random
 from typing import Any, Optional
 
 import jax
@@ -31,10 +32,10 @@ class Inference:
     _NP_ONE = np.ones((1,))
 
     def __init__(
-        self,
-        path: Optional[str] = None,
-        parameters: Optional[ModelParams] = None,
-        config: Optional[InferConfig] = None,
+            self,
+            path: Optional[str] = None,
+            parameters: Optional[ModelParams] = None,
+            config: Optional[InferConfig] = None,
     ):
         path = "checkpoint_slim/" if path is None else path
 
@@ -49,15 +50,17 @@ class Inference:
         )
 
     def generate_tokens(
-        self,
-        prompt: np.ndarray,
-        length: Optional[int] = None,
-        top_p: Optional[float] = None,
-        temperature: Optional[float] = None,
+            self,
+            prompt: np.ndarray,
+            length: Optional[int] = None,
+            top_p: Optional[float] = None,
+            temperature: Optional[float] = None,
     ) -> np.ndarray:
         length = default(length, self.config.token_length)
         top_p = default(top_p, self.config.top_p)
-        temperature = default(temperature, self.config.temperature)
+        new_temp = random.random() * (self.config.max_temperature - self.config.min_temperature)
+        new_temp += self.config.min_temperature
+        temperature = default(temperature, new_temp)
         prompt = prompt[:, -2048:]
         prompt = prompt[:, length:]
 
@@ -83,11 +86,11 @@ class Inference:
         return out[0][0, :, 0]
 
     def generate(
-        self,
-        prompt: str,
-        length: Optional[int] = None,
-        top_p: Optional[float] = None,
-        temperature: Optional[float] = None,
+            self,
+            prompt: str,
+            length: Optional[int] = None,
+            top_p: Optional[float] = None,
+            temperature: Optional[float] = None,
     ) -> str:
         inp_tokens = self.tokenizer([prompt], verbose=False, return_tensors="np")
         inp_tokens = inp_tokens["input_ids"][0]

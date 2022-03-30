@@ -11,8 +11,9 @@ class InferConfig:
     prompt_length: int = 65536
     token_length: int = 16
     response_probability: float = 0.02
-    top_p: float = 1
-    temperature: float = 0.9
+    top_p: float = 1.0
+    min_temperature: float = 0.6
+    max_temperature: float = 1.2
     max_same_replies: int = 2
     same_reply_saved_messages: int = 6
     max_response_retries: int = 3

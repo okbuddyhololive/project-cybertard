@@ -9,8 +9,9 @@ name = "Suisei"
 prompt_length = 65536
 token_length = 16
 response_probability = 0.02
-top_p = 1
-temperature = 0.9
+top_p = 1.0
+min_temperature = 0.6
+max_temperature = 0.6
 
 [Model]
 layers = 28
