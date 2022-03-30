@@ -9,7 +9,7 @@ _key = "[a-zA-Z0-9\.]+"
 _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
                            f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
                            f"config:\n    {_key}: {_key})")
-_EMOJI_RE = re.compile(f"<(:{_key}:)[0-9]+>")
+_EMOJI_RE = re.compile(f"<?(:{_key}:)[0-9]+>?")
 
 
 def replace_ping(original_name: str, new_id: int, text: str) -> str:
