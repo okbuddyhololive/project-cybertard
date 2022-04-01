@@ -1,3 +1,4 @@
+import typing
 from dataclasses import dataclass
 
 import optax
@@ -10,6 +11,7 @@ class InferConfig:
     name: str = "Holotard"
     prompt_length: int = 65536
     token_length: int = 16
+    channels: str = ""
     response_probability: float = 0.02
     top_p: float = 1.0
     min_temperature: float = 0.6
@@ -33,11 +35,7 @@ class ModelParams:
     per_replica_batch: int = 1
 
     # batch size of 2 needs 200gb, 1 needs <16. wtf
-    optimizer: optax.chain = optax.chain(
-        optax.adaptive_grad_clip(0.001),
-        optax.centralize(),
-        optax.scale_by_adam(0.99, 0.999),
-        optax.additive_weight_decay(1e-3),
-        optax.scale(-1e-5),
-    )
+    optimizer: optax.chain = optax.chain(optax.adaptive_grad_clip(0.001), optax.centralize(),
+                                         optax.scale_by_adam(0.99, 0.999), optax.additive_weight_decay(1e-3),
+                                         optax.scale(-1e-5), )
     sampler = None
