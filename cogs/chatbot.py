@@ -23,7 +23,7 @@ class Chatbot(commands.Cog):
             return
 
         channel_id = message.channel.id
-        if str(channel_id) not in self.bot.config.infer_config.channels.split(';'):
+        if str(channel_id) not in self.bot.infer_config.channels.split(';'):
             return
 
         content = message.clean_content
