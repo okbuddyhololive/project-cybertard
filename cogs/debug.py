@@ -60,7 +60,7 @@ class Debug(commands.Cog):
 
         await ctx.send(f"Successfully added <#{channel.id}> to the channel list")
     
-    @commands.command()
+    @commands.command(aliases=["whitelist", "channel"])
     @commands.is_owner()
     async def channels(self, ctx, action: Optional[str] = None, channel: Optional[TextChannel] = None):
         if action is None or action.lower() == "list":
