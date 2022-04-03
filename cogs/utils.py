@@ -9,6 +9,7 @@ _key = "[a-zA-Z0-9\.]+"
 _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
                            f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
                            f"config:\n    {_key}: {_key})|"
+                           # TODO: combine these four into two using regex groups
                            f"Successfully added <{_key}> to the channel list|"
                            f"Successfully removed <{_key}> from the channel list|"
                            f"Channel <{_key}> is already in the list|"
@@ -54,4 +55,12 @@ def format_config_message(config: dict) -> str:
         text += f"{key}: {value}\n"
 
     text += "```"
+    return text
+
+def format_channel_message(channels: List[int]) -> str:
+    text = "Whitelisted channels:\n"
+
+    for channel in channels:
+        text += f"  - <#{channel}>\n"
+
     return text

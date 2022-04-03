@@ -64,7 +64,7 @@ class Debug(commands.Cog):
     @commands.is_owner()
     async def channels(self, ctx, action: Optional[str] = None, channel: Optional[TextChannel] = None):
         if action is None or action.lower() == "list":
-            return await ctx.send(utils.format_channels_message(self.bot.config["channels"]))
+            return await ctx.send(utils.format_channel_message(self.bot.config["channels"]))
         
         if channel is None:
             return await ctx.send("You must specify a channel!")
