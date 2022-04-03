@@ -9,11 +9,8 @@ _key = "[a-zA-Z0-9\.]+"
 _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
                            f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
                            f"config:\n    {_key}: {_key})|"
-                           # TODO: combine these four into two using regex groups
-                           f"Successfully added <{_key}> to the channel list|"
-                           f"Successfully removed <{_key}> from the channel list|"
-                           f"Channel <{_key}> is already in the list|"
-                           f"Channel <{_key}> is not in the list|"
+                           f"Successfully (added|removed) <#[0-9]+> (from|to) the channel list|"
+                           f"Channel <#[0-9]+> is (already|not) in the list|"
                            f"Invalid action `{_key}`|"
                            "You must specify a channel!"
                            )
