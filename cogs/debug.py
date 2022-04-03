@@ -34,7 +34,7 @@ class Debug(commands.Cog):
         await ctx.send(f"Successfully set `{key}` from `{original_value}` to `{value}`")
 
     @commands.command()
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
     async def config(self, ctx, key: Optional[str] = None, *, value=None):
         if key is None or key.lower() == "list":
             return await ctx.send(utils.format_config_message(self.bot.infer_config.__dict__))     
@@ -61,7 +61,7 @@ class Debug(commands.Cog):
         await ctx.send(f"Successfully added <#{channel.id}> to the channel list")
     
     @commands.command(aliases=["whitelist", "channel"])
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_permissions(administrator=True))
     async def channels(self, ctx, action: Optional[str] = None, channel: Optional[TextChannel] = None):
         if action is None or action.lower() == "list":
             return await ctx.send(utils.format_channel_message(self.bot.config["channels"]))
