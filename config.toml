@@ -2,9 +2,14 @@
 # TODO: comment out the variables and what do they mean
 
 prefix = "%"
+channels = [
+    935543814335107152, # general
+    857816615273889813, # unholo
+    857816882899583006, # chill-chat
+    950404990806130718, # bot-testing
+]
 
 [Inference]
-channels = "935543814335107152;857822603292442674;857816882899583006"
 name = "Suisei"
 prompt_length = 65536
 token_length = 16

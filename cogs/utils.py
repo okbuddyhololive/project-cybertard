@@ -8,7 +8,14 @@ from model.constants import BAD_WORDS
 _key = "[a-zA-Z0-9\.]+"
 _AUTO_MESSAGE = re.compile(f"(Attribute `[a-zA-Z0-9.]+(` is `{_key}`|` does not exist in the inference config)|"
                            f"Successfully set `{_key}` from `{_key}` to `{_key}`|"
-                           f"config:\n    {_key}: {_key})")
+                           f"config:\n    {_key}: {_key})|"
+                           f"Successfully added <{_key}> to the channel list|"
+                           f"Successfully removed <{_key}> from the channel list|"
+                           f"Channel <{_key}> is already in the list|"
+                           f"Channel <{_key}> is not in the list|"
+                           f"Invalid action `{_key}`|"
+                           "You must specify a channel!"
+                           )
 _EMOJI_RE = re.compile(f"<?(:{_key}:)[0-9]+>?")
 
 
@@ -39,3 +46,12 @@ def fix_emojis_and_mentions(text: str, users: List[User], emojis: List[Emoji]) -
 def filter_message(text: str) -> bool:
     text = text.lower()
     return any(word in text for word in BAD_WORDS)
+
+def format_config_message(config: dict) -> str:
+    text = "```\n"
+
+    for key, value in config.items():
+        text += f"{key}: {value}\n"
+
+    text += "```"
+    return text

@@ -23,7 +23,7 @@ class Chatbot(commands.Cog):
             return
 
         channel_id = message.channel.id
-        if str(channel_id) not in self.bot.infer_config.channels.split(';'):
+        if channel_id not in self.bot.config["channels"]:
             return
 
         content = message.clean_content
@@ -45,13 +45,12 @@ class Chatbot(commands.Cog):
             return
 
         messages = prompt.replace(self.bot.user.name, self.bot.infer_config.name)
-        function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:")
         # partial function needed for async
-
+        function = functools.partial(self.model.generate, prompt=messages + f"<{self.bot.infer_config.name}>:")
+        
         async with message.channel.typing():
             for _ in range(self.bot.infer_config.max_response_retries):
                 response = await self.bot.loop.run_in_executor(None, function)
-
                 response = response.split("\n-----\n")[0]
 
                 if not response:

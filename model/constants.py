@@ -11,11 +11,13 @@ class InferConfig:
     name: str = "Holotard"
     prompt_length: int = 65536
     token_length: int = 16
-    channels: str = ""
+
     response_probability: float = 0.02
     top_p: float = 1.0
+
     min_temperature: float = 0.6
     max_temperature: float = 1.2
+
     max_same_replies: int = 2
     same_reply_saved_messages: int = 6
     max_response_retries: int = 3
@@ -27,9 +29,11 @@ class ModelParams:
     d_model: int = 4096
     n_heads: int = 16
     n_vocab: int = 50400
+
     norm: str = "layernorm"
     pe: str = "rotary"
     pe_rotary_dims: int = 64
+    
     seq: int = 2048
     cores_per_replica: int = 8
     per_replica_batch: int = 1
